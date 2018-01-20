@@ -31,32 +31,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         startApp();
-
     }
 
     void startApp(){
-        /// UI definitions
-        this.clientNameInput = (EditText)findViewById(R.id.client_name_input);
-        this.setNameButton = findViewById(R.id.set_name_button);
 
-        /// Client settings definition
-        this.sharedPreferences = getSharedPreferences("ClientSettings", this.MODE_PRIVATE);
-        this.clientSettings = new ClientSettings(this.sharedPreferences.getString("Name", ""));
 
-        /// UI Event listeners
-        this.setNameButton .setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                clientSettings = new ClientSettings(clientNameInput.getText().toString());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("Name", clientSettings.getName());
-                editor.commit();
-            }
-        });
+        if(isNotificationServiceEnabled()){
+            /// Show UI
+            setContentView(R.layout.activity_main);
 
-        if(!isNotificationServiceEnabled()){
+            /// UI definitions
+            this.clientNameInput = (EditText)findViewById(R.id.client_name_input);
+            this.setNameButton = findViewById(R.id.set_name_button);
+
+            /// Client settings definition
+            this.sharedPreferences = getSharedPreferences("ClientSettings", this.MODE_PRIVATE);
+            this.clientSettings = new ClientSettings(this.sharedPreferences.getString("Name", ""));
+            this.clientNameInput.setText(this.clientSettings.getName());
+
+            /// UI Event listeners
+            this.setNameButton .setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    clientSettings = new ClientSettings(clientNameInput.getText().toString());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("Name", clientSettings.getName());
+                    editor.commit();
+                    showToast("Device name is saved");
+                }
+            });
+        }
+        else{
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
         }
