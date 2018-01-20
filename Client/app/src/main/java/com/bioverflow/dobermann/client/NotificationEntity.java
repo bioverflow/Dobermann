@@ -12,12 +12,14 @@ public class NotificationEntity {
     public String Text;
     public String SubText;
     public Date CurrentTime;
+    public ClientSettings Client;
 
     public NotificationEntity(){
         // Default constructor required for calls to DataSnapshot.getValue(NotificationEntity.class)
     }
 
-    public  NotificationEntity(Date currentTime, String packageName, String title, String text, String subText){
+    public  NotificationEntity(ClientSettings client, Date currentTime, String packageName, String title, String text, String subText){
+        this.Client = client;
         this.CurrentTime = currentTime;
         this.PackageName = packageName;
         this.Title = title;

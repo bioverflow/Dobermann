@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog enableNotificationListenerAlertDialog;
 
+    public  static ClientSettings clientSettings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void startApp(){
+        this.clientSettings = new ClientSettings("TATIANA");
+
         final Button button = findViewById(R.id.start_notification_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

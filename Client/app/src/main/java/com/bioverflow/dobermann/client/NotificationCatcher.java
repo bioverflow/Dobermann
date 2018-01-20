@@ -42,7 +42,7 @@ public class NotificationCatcher extends NotificationListenerService {
             Bundle extras = sbn.getNotification().extras;
 
             /// Formatting only important information in an entity to save in database in future
-            NotificationEntity notification = new NotificationEntity(Calendar.getInstance().getTime(), sbn.getPackageName(), extras.getString(Notification.EXTRA_TITLE), (extras.getCharSequence(Notification.EXTRA_TEXT)).toString(), extras.getCharSequence(Notification.EXTRA_SUB_TEXT)!= null ? (extras.getCharSequence(Notification.EXTRA_SUB_TEXT)).toString():"");
+            NotificationEntity notification = new NotificationEntity(MainActivity.clientSettings, Calendar.getInstance().getTime(), sbn.getPackageName(), extras.getString(Notification.EXTRA_TITLE), (extras.getCharSequence(Notification.EXTRA_TEXT)).toString(), extras.getCharSequence(Notification.EXTRA_SUB_TEXT)!= null ? (extras.getCharSequence(Notification.EXTRA_SUB_TEXT)).toString():"");
 
             // Saving in database
             this.notificationRef.push().setValue(notification);
