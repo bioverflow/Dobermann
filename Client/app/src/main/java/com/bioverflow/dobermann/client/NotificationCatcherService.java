@@ -20,12 +20,12 @@ import java.util.Calendar;
 
 @SuppressLint("OverrideAbstract")
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class NotificationCatcher extends NotificationListenerService {
+public class NotificationCatcherService extends NotificationListenerService {
     private FirebaseDatabase database;
     private DatabaseReference notificationRef;
     private ClientSettings clientSettings;
 
-    public NotificationCatcher() {
+    public NotificationCatcherService() {
         database = FirebaseDatabase.getInstance();
         notificationRef = database.getReference("Notifications");
     }

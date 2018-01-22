@@ -11,7 +11,7 @@ public class DobermannBroadcastReceiver extends BroadcastReceiver {
         switch (intent.getAction()){
             case "android.intent.action.BOOT_COMPLETED":
                 /// Start notification catcher service
-                context.startService(new Intent(context, NotificationCatcher.class));
+                context.startService(new Intent(context, NotificationCatcherService.class));
                 break;
             default:
                 break;
