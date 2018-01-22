@@ -5,6 +5,7 @@
 
  * Show all notifications in real time (Whatsapp, instagram, calls, SMS, and more).
  * Start services on boot.
+ * Auto upgrade via website (not Google Play) _this feature in testing_.
  * Record Whatsapp sessions.
  * Record Facebook Messenger sessions.
  * Record GPS locations.
