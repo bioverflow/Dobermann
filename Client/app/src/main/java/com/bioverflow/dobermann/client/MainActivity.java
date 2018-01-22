@@ -21,12 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog enableNotificationListenerAlertDialog;
 
-    public  static ClientSettings clientSettings;
+    private ClientSettings clientSettings;
 
     private EditText clientNameInput;
     private Button setNameButton;
-    private SharedPreferences sharedPreferences;
-
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void startApp(){
-
-
         if(isNotificationServiceEnabled()){
             /// Show UI
             setContentView(R.layout.activity_main);
@@ -47,18 +44,15 @@ public class MainActivity extends AppCompatActivity {
             this.setNameButton = findViewById(R.id.set_name_button);
 
             /// Client settings definition
-            this.sharedPreferences = getSharedPreferences("ClientSettings", this.MODE_PRIVATE);
-            this.clientSettings = new ClientSettings(this.sharedPreferences.getString("Name", ""));
+            this.clientSettings = getClientSettings();
             this.clientNameInput.setText(this.clientSettings.getName());
 
             /// UI Event listeners
             this.setNameButton .setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    clientSettings = new ClientSettings(clientNameInput.getText().toString());
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("Name", clientSettings.getName());
-                    editor.commit();
-                    showToast("Device name is saved");
+                    clientSettings = new ClientSettings(context, clientNameInput.getText().toString());
+
+                    Utils.showToast(context, "Device name is saved");
                 }
             });
         }
@@ -68,13 +62,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void showToast(String message){
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+    ClientSettings getClientSettings(){
+        return new ClientSettings(this);
     }
 
     /**
@@ -110,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog buildNotificationServiceAlertDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Enable notifications listener");
-        alertDialogBuilder.setMessage("If is not active you can not catch every notification");
+        alertDialogBuilder.setMessage("If you no set this settings you cannot use core of this app");
         alertDialogBuilder.setPositiveButton("yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
