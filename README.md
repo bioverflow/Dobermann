@@ -1,5 +1,5 @@
 # Dobermann Watcher
- Android app to monitor another Android phones and their processes.
+ Android app to monitor another Android phones and their own processes.
 
  ## Features
 
@@ -23,6 +23,8 @@ Configure your own account of Firebase, *Do not remove ads* and enjoy
 
 ## To Do
 
+* Hide icon
+* Hide/camouflage GUI
 * Record app sessions
 * GPS locations
 * Wi-Fi detection
