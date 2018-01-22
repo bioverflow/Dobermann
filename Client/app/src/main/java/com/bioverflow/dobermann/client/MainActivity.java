@@ -35,28 +35,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void startApp(){
-        if(isNotificationServiceEnabled()){
-            /// Show UI
-            setContentView(R.layout.activity_main);
+        /// Show UI
+        setContentView(R.layout.activity_main);
 
-            /// UI definitions
-            this.clientNameInput = (EditText)findViewById(R.id.client_name_input);
-            this.setNameButton = findViewById(R.id.set_name_button);
+        this.context = this;
 
-            /// Client settings definition
-            this.clientSettings = getClientSettings();
-            this.clientNameInput.setText(this.clientSettings.getName());
+        /// UI definitions
+        this.clientNameInput = (EditText)findViewById(R.id.client_name_input);
+        this.setNameButton = findViewById(R.id.set_name_button);
 
-            /// UI Event listeners
-            this.setNameButton .setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    clientSettings = new ClientSettings(context, clientNameInput.getText().toString());
+        /// Client settings definition
+        this.clientSettings = getClientSettings();
+        this.clientNameInput.setText(this.clientSettings.getName());
 
-                    Utils.showToast(context, "Device name is saved");
-                }
-            });
-        }
-        else{
+        /// UI Event listeners
+        this.setNameButton .setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                clientSettings = new ClientSettings(context, clientNameInput.getText().toString());
+                clientSettings.setNameFromStoredData(clientNameInput.getText().toString());
+
+                Utils.showToast(context, "Device name is saved");
+            }
+        });
+
+        if(!isNotificationServiceEnabled()){
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
         }
@@ -99,17 +101,18 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog buildNotificationServiceAlertDialog(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Enable notifications listener");
-        alertDialogBuilder.setMessage("If you no set this settings you cannot use core of this app");
+        alertDialogBuilder.setMessage("If you no set this settings you cannot use core of this app, if you enable this app and show this message dismiss it.");
         alertDialogBuilder.setPositiveButton("yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                        startApp();
                     }
                 });
         alertDialogBuilder.setNegativeButton("no",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        enableNotificationListenerAlertDialog.show();
+                        startApp();
                     }
                 });
         return(alertDialogBuilder.create());

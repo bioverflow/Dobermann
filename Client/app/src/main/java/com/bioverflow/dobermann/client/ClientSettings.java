@@ -49,9 +49,9 @@ public class ClientSettings {
         return this.sharedPreferences.getString("Name", "DEFAULT");
     }
 
-    public  void setNameFromStoredData(){
+    public  void setNameFromStoredData(String name){
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("Name", getName());
+        editor.putString("Name", name);
         editor.commit();
     }
 
