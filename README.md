@@ -4,6 +4,8 @@
  ## Features
 
  * Show all notifications in real time (Whatsapp, instagram, calls, SMS, and more).
+ * Start services on boot.
+ * Easy usage.
  * Record Whatsapp sessions.
  * Record Facebook Messenger sessions.
  * Record GPS locations.
