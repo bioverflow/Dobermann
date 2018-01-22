@@ -5,11 +5,11 @@
 
  * Show all notifications in real time (Whatsapp, instagram, calls, SMS, and more).
  * Start services on boot.
- * Easy usage.
  * Record Whatsapp sessions.
  * Record Facebook Messenger sessions.
  * Record GPS locations.
  * Detect Wi-Fi connections to upload every logs.
+ * Easy usage.
 
  ## Client project
 
@@ -21,7 +21,7 @@
 
 ## Free usage
 
-Configure your own account of Firebase, *Do not remove ads* and enjoy
+Configure your own account of Firebase, **Do not remove ads** and enjoy
 
 ## To Do
 
