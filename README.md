@@ -1,2 +1,28 @@
-# dobermann
- Android app to watching another Android phones like control parental
+# Dobermann Watcher
+ Android app to monitor another Android phones and their processes.
+
+ ## Features
+
+ * Show all notifications in real time (Whatsapp, instagram, calls, SMS, and more).
+ * Record Whatsapp sessions.
+ * Record Facebook Messenger sessions.
+ * Record GPS locations.
+ * Detect Wi-Fi connections to upload every logs.
+
+ ## Client project
+
+ Is a series of services and broadcast receivers to catch every important process
+
+ ## Admin Project
+
+ Is a simple project to register a device and show all logs
+
+## Free usage
+
+Configure your own account of Firebase, *Do not remove ads* and enjoy
+
+## To Do
+
+* Record app sessions
+* GPS locations
+* Wi-Fi detection
