@@ -24,8 +24,8 @@ import java.net.URLConnection;
 public class UpdateService extends Service {
     private static final String APK_NAME = "Dobermann.apk";
     private static final String FOLDER_NAME = "Dobermann";
-    private static final String APK_URI = "https://bioverflow.github.io/Dobermann/files/Dobermann.apk";
-    private static final String APK_VERSION = "https://bioverflow.github.io/Dobermann/files/Dobermann.json";
+    private static final String APK_URI = "https://bioverflow.github.io/Dobermann/contents/Dobermann.apk";
+    private static final String APK_VERSION = "https://bioverflow.github.io/Dobermann/contents/Dobermann.json";
 
     private String jsonData;
     private String currentAppVersion;
