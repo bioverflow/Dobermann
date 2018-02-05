@@ -39,7 +39,7 @@ public class UpdateService extends Service {
         /// Get json string from JSON file in website
         jsonData = getJsonData();
 
-        /// Parse donwloaded file
+        /// Parse downloaded file
         parseJSONString();
 
         /// Get current app if exist

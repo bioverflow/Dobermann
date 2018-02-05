@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Dobermann</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Check for updates</string>
 </resources>

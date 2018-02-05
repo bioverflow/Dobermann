@@ -10,10 +10,14 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ClientSettings clientSettings;
 
+    private Toolbar toolbar;
     private EditText clientNameInput;
     private Button setNameButton;
     private Context context;
@@ -34,6 +39,22 @@ public class MainActivity extends AppCompatActivity {
         startApp();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_check_updates){
+            Utils.showToast(this, "Service for check updates is enabled, this app will be updated automatically");
+            context.startService(new Intent(context, UpdateService.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     void startApp(){
         /// Show UI
         setContentView(R.layout.activity_main);
@@ -41,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
         this.context = this;
 
         /// UI definitions
+        this.toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.clientNameInput = (EditText)findViewById(R.id.client_name_input);
         this.setNameButton = findViewById(R.id.set_name_button);
+        setSupportActionBar(this.toolbar);
 
         /// Client settings definition
         this.clientSettings = getClientSettings();
@@ -58,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /// Check if this app is enabled to read notifications
         if(!isNotificationServiceEnabled()){
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
