@@ -39,21 +39,30 @@ public class UpdateService extends Service {
         /// Get json string from JSON file in website
         jsonData = getJsonData();
 
-        /// Parse downloaded file
-        parseJSONString();
+        if(jsonData != null){
+            /// Parse downloaded file
+            parseJSONString();
+        }
 
         /// Get current app if exist
         currentAppVersion = getCurrentAppVersion();
 
-        /// If version of current app is outdated
-        if(validateAppVersion(currentAppVersion, jsonAppVersion) == false) {
-            /// Create an installation folder
-            createFolder();
-            /// Check if folder is created succesfuly
-            if(existInstallationFolder()){
-                /// Download new apk from website
-                downloadApk();
+        /// If localstorage has not any version
+        if(currentAppVersion.length() > 0){
+            /// If version of current app is outdated
+            if(validateAppVersion(currentAppVersion, jsonAppVersion) == false) {
+                /// Create an installation folder
+                createFolder();
+                /// Check if folder is created succesfuly
+                if(existInstallationFolder()){
+                    /// Download new apk from website and install when is finished
+                    downloadApk();
+                }
             }
+        }
+        else{
+            // Save the version obtained in jsonData
+            saveLatestAppVersion(this.jsonAppVersion);
         }
     }
 
@@ -67,9 +76,15 @@ public class UpdateService extends Service {
         return this.sharedPreferences.getString("CurrentVersion", "");
     }
 
+    private void saveLatestAppVersion(String version){
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putString("CurrentVersion", version);
+        editor.commit();
+    }
+
     private boolean validateAppVersion(String currentVersion, String fileVersion){
         boolean isUpdated = true;
-        if(jsonAppVersion.length() > 0){
+        if(this.jsonAppVersion.length() > 0){
             versionComparator= new VersionComparator();
             int result = versionComparator.compare(currentVersion, fileVersion);
             if (result < 0) isUpdated = false;
@@ -106,9 +121,11 @@ public class UpdateService extends Service {
         try {
             mainObject = new JSONObject(jsonData);
             JSONObject uniObject = mainObject.getJSONObject("app");
-            jsonAppVersion = uniObject.getString("version");
-            jsonAppName = uniObject.getString("name");
+            this.jsonAppVersion = uniObject.getString("version");
+            this.jsonAppName = uniObject.getString("name");
         } catch (Exception e) {
+            Utils.showToast(this, e.getMessage());
+            Utils.postError("Error on parseJSONString(): " + e.getMessage());
             // Do something else on failure
         }
 
@@ -132,6 +149,8 @@ public class UpdateService extends Service {
             sb.delete(0, sb.length());
             return line;
         } catch (Exception e) {
+            Utils.showToast(this, e.getMessage());
+            Utils.postError("Error on getJsonData(): " + e.getMessage());
             return null;
         }
     }
