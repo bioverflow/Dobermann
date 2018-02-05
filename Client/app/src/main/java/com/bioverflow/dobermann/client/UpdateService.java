@@ -24,13 +24,13 @@ import java.net.URLConnection;
 public class UpdateService extends Service {
     private static final String APK_NAME = "Dobermann.apk";
     private static final String FOLDER_NAME = "Dobermann";
-    private static final String APK_URI = "https://bioverflow.github.io/Dobermann/contents/Dobermann.apk";
     private static final String APK_VERSION = "https://bioverflow.github.io/Dobermann/contents/Dobermann.json";
 
     private String jsonData;
     private String currentAppVersion;
     private String jsonAppVersion;
     private String jsonAppName;
+    private String jsonAppLink;
     private VersionComparator versionComparator;
 
     private SharedPreferences sharedPreferences;
@@ -123,6 +123,7 @@ public class UpdateService extends Service {
             JSONObject uniObject = mainObject.getJSONObject("app");
             this.jsonAppVersion = uniObject.getString("version");
             this.jsonAppName = uniObject.getString("name");
+            this.jsonAppLink = uniObject.getString("link");
         } catch (Exception e) {
             Utils.showToast(this, e.getMessage());
             Utils.postError("Error on parseJSONString(): " + e.getMessage());
@@ -134,7 +135,7 @@ public class UpdateService extends Service {
     ///https://stackoverflow.com/questions/13196234/simple-parse-json-from-url-on-android-and-display-in-listview#answer-43012984
     protected String getJsonData() {
         try {
-            URL Url = new URL(APK_VERSION);
+            URL Url = new URL(this.APK_VERSION);
             HttpURLConnection connection = (HttpURLConnection) Url.openConnection();
             InputStream is = connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -157,9 +158,9 @@ public class UpdateService extends Service {
 
     ///https://stackoverflow.com/questions/15213211/update-an-android-app-without-google-play
     private String downloadApk() {
-        String path = APK_NAME;
+        String path = this.APK_NAME;
         try {
-            URL url = new URL(APK_URI);
+            URL url = new URL(this.jsonAppLink);
             URLConnection connection = url.openConnection();
             connection.connect();
 
