@@ -24,13 +24,13 @@ import java.net.URLConnection;
 public class UpdateService extends Service {
     private static final String APK_NAME = "Dobermann.apk";
     private static final String FOLDER_NAME = "Dobermann";
-    private static final String APK_URI = "https://bioverflow.github.io/Dobermann/files/Dobermann.apk";
-    private static final String APK_VERSION = "https://bioverflow.github.io/Dobermann/files/Dobermann.json";
+    private static final String APK_VERSION = "https://bioverflow.github.io/Dobermann/contents/Dobermann.json";
 
     private String jsonData;
     private String currentAppVersion;
     private String jsonAppVersion;
     private String jsonAppName;
+    private String jsonAppLink;
     private VersionComparator versionComparator;
 
     private SharedPreferences sharedPreferences;
@@ -39,21 +39,30 @@ public class UpdateService extends Service {
         /// Get json string from JSON file in website
         jsonData = getJsonData();
 
-        /// Parse donwloaded file
-        parseJSONString();
+        if(jsonData != null){
+            /// Parse downloaded file
+            parseJSONString();
+        }
 
         /// Get current app if exist
         currentAppVersion = getCurrentAppVersion();
 
-        /// If version of current app is outdated
-        if(validateAppVersion(currentAppVersion, jsonAppVersion) == false) {
-            /// Create an installation folder
-            createFolder();
-            /// Check if folder is created succesfuly
-            if(existInstallationFolder()){
-                /// Download new apk from website
-                downloadApk();
+        /// If localstorage has not any version
+        if(currentAppVersion.length() > 0){
+            /// If version of current app is outdated
+            if(validateAppVersion(currentAppVersion, jsonAppVersion) == false) {
+                /// Create an installation folder
+                createFolder();
+                /// Check if folder is created succesfuly
+                if(existInstallationFolder()){
+                    /// Download new apk from website and install when is finished
+                    downloadApk();
+                }
             }
+        }
+        else{
+            // Save the version obtained in jsonData
+            saveLatestAppVersion(this.jsonAppVersion);
         }
     }
 
@@ -67,9 +76,15 @@ public class UpdateService extends Service {
         return this.sharedPreferences.getString("CurrentVersion", BuildConfig.VERSION_NAME);
     }
 
+    private void saveLatestAppVersion(String version){
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        editor.putString("CurrentVersion", version);
+        editor.commit();
+    }
+
     private boolean validateAppVersion(String currentVersion, String fileVersion){
         boolean isUpdated = true;
-        if(jsonAppVersion.length() > 0){
+        if(this.jsonAppVersion.length() > 0){
             versionComparator= new VersionComparator();
             int result = versionComparator.compare(currentVersion, fileVersion);
             if (result < 0) isUpdated = false;
@@ -106,9 +121,12 @@ public class UpdateService extends Service {
         try {
             mainObject = new JSONObject(jsonData);
             JSONObject uniObject = mainObject.getJSONObject("app");
-            jsonAppVersion = uniObject.getString("version");
-            jsonAppName = uniObject.getString("name");
+            this.jsonAppVersion = uniObject.getString("version");
+            this.jsonAppName = uniObject.getString("name");
+            this.jsonAppLink = uniObject.getString("link");
         } catch (Exception e) {
+            Utils.showToast(this, e.getMessage());
+            Utils.postError("Error on parseJSONString(): " + e.getMessage());
             // Do something else on failure
         }
 
@@ -117,7 +135,7 @@ public class UpdateService extends Service {
     ///https://stackoverflow.com/questions/13196234/simple-parse-json-from-url-on-android-and-display-in-listview#answer-43012984
     protected String getJsonData() {
         try {
-            URL Url = new URL(APK_VERSION);
+            URL Url = new URL(this.APK_VERSION);
             HttpURLConnection connection = (HttpURLConnection) Url.openConnection();
             InputStream is = connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -132,15 +150,17 @@ public class UpdateService extends Service {
             sb.delete(0, sb.length());
             return line;
         } catch (Exception e) {
+            Utils.showToast(this, e.getMessage());
+            Utils.postError("Error on getJsonData(): " + e.getMessage());
             return null;
         }
     }
 
     ///https://stackoverflow.com/questions/15213211/update-an-android-app-without-google-play
     private String downloadApk() {
-        String path = APK_NAME;
+        String path = this.APK_NAME;
         try {
-            URL url = new URL(APK_URI);
+            URL url = new URL(this.jsonAppLink);
             URLConnection connection = url.openConnection();
             connection.connect();
 
