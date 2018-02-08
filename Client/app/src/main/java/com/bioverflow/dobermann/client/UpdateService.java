@@ -64,7 +64,7 @@ public class UpdateService extends Service {
 
     public String getCurrentAppVersion(){
         this.sharedPreferences = this.getSharedPreferences("ClientSettings", this.MODE_PRIVATE);
-        return this.sharedPreferences.getString("CurrentVersion", "");
+        return this.sharedPreferences.getString("CurrentVersion", BuildConfig.VERSION_NAME);
     }
 
     private boolean validateAppVersion(String currentVersion, String fileVersion){
